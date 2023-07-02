@@ -23,6 +23,6 @@ func Routes() http.Handler {
 
 	mux.Use(middleware.Heartbeat("/ping"))
 
-	//mux.Post("/authenticate", app.Authenticate)
+	mux.Post("/log", CreateLogEntry)
 	return mux
 }
