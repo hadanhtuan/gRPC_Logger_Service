@@ -7,10 +7,10 @@ import (
 	"reflect"
 	"time"
 
-	"LOGGER-SERVICE/common"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"logger/common"
 )
 
 type DBInstance struct {

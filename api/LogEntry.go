@@ -1,10 +1,10 @@
 package api
 
 import (
-	"LOGGER-SERVICE/common"
-	"LOGGER-SERVICE/model"
 	"bytes"
 	"encoding/json"
+	"logger/common"
+	"logger/model"
 	"net/http"
 )
 

@@ -1,13 +1,13 @@
 package main
 
 import (
-	"LOGGER-SERVICE/api"
-	"LOGGER-SERVICE/model"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"logger/api"
+	"logger/model"
 	"net/http"
 	"os"
 )
@@ -68,6 +68,8 @@ func main() {
 	if err != nil {
 		return
 	}
+
+	go api.GRPCListen()
 
 	protocol := os.Getenv("protocol")
 	if protocol == "" {

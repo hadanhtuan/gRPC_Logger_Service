@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package protobuf;
+
+option go_package = "/protobuf";
+import "google/protobuf/any.proto";
+message LogEntry {
+  string name =  1;
+  string data = 2;
+}
+
+message CountLog {
+  string name = 1;
+  int64 count = 2;
+}
+
+message LogRequest {
+  LogEntry logEntry = 1;
+}
+
+message LogResponse {
+  string status = 1;
+  string message = 2;
+  google.protobuf.Any data = 3;
+}
+
+service LogService {
+  rpc WriteLog(LogRequest) returns (LogResponse);
+  rpc GetLogByName(LogRequest) returns (stream LogResponse);
+  rpc CountLogByName(stream LogRequest) returns (CountLog);
+}

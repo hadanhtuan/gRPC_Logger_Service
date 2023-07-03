@@ -15,8 +15,10 @@ type LogEntry struct {
 	LastUpdatedBy   string     `json:"lastUpdatedBy,omitempty" bson:"last_updated_by,omitempty"`
 	LastUpdatedTime *time.Time `json:"lastUpdatedTime,omitempty" bson:"last_updated_time,omitempty"`
 
-	ID        primitive.ObjectID `json:"-" bson:"_id,omitempty" `
-	CarrierId int64              `json:"carrierId" bson:"carrier_id,omitempty"`
+	ID primitive.ObjectID `json:"-" bson:"_id,omitempty" `
+
+	Name string `json:"name" bson:"name,omitempty"`
+	Data string `json:"data" bson:"data,omitempty"`
 }
 
 var LogEntryDB = &DBInstance{
