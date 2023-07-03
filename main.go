@@ -19,29 +19,34 @@ const (
 )
 
 // "mongodb://mongo:27017"
-func connectToMongo() (*mongo.Database, error) {
+func connectToMongo() (*mongo.Client, error) {
 	// create connection options
 	mongoURL := os.Getenv("mongoURL")
-	admin := os.Getenv("mongoURL")
-	password := os.Getenv("mongoURL")
-	dbName := os.Getenv("dbName")
+	dbUser := os.Getenv("dbUser")
+	dbPassword := os.Getenv("dbPassword")
 
 	clientOptions := options.Client().ApplyURI(mongoURL)
 	clientOptions.SetAuth(options.Credential{
-		Username: admin,
-		Password: password,
+		Username: dbUser,
+		Password: dbPassword,
 	})
 
 	// connect
-	c, err := mongo.Connect(context.TODO(), clientOptions)
+	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Println("Error connecting:", err)
 		return nil, err
 	}
 
+	//// Ping the MongoDB server to verify the connection
+	//err = client.Ping(context.Background(), nil)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+
 	log.Println("Connected to mongo!")
 
-	return c.Database(dbName), nil
+	return client, nil
 }
 
 func onDBConnected(s *mongo.Database) error {
@@ -53,12 +58,13 @@ func onDBConnected(s *mongo.Database) error {
 }
 
 func main() {
-	db, err := connectToMongo()
+	client, err := connectToMongo()
 	if err != nil {
 		return
 	}
+	dbName := os.Getenv("dbName")
 
-	err = onDBConnected(db)
+	err = onDBConnected(client.Database(dbName))
 	if err != nil {
 		return
 	}
@@ -71,7 +77,7 @@ func main() {
 
 	if protocol == "HTTP" {
 		srv := &http.Server{
-			Addr:    fmt.Sprintf(":%s", webPort),
+			Addr:    ":8089",
 			Handler: api.Routes(),
 		}
 

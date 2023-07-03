@@ -1,55 +1,41 @@
 package api
 
 import (
+	"LOGGER-SERVICE/common"
+	"LOGGER-SERVICE/model"
 	"bytes"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"net/http"
 )
 
 func CreateLogEntry(w http.ResponseWriter, r *http.Request) {
-	var requestPayload struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
+	var logEntry model.LogEntry
 
-	err := app.readJSON(w, r, &requestPayload)
+	dec := json.NewDecoder(r.Body)
+	err := dec.Decode(&logEntry)
 	if err != nil {
-		app.errorJSON(w, err, http.StatusBadRequest)
+		common.WriteJSON(w, 400, &common.APIResponse{
+			Status:  common.APIStatus.Invalid,
+			Message: err.Error(),
+		}, nil)
 		return
 	}
 
-	// validate the user against the database
-	user, err := app.Models.User.GetByEmail(requestPayload.Email)
-	if err != nil {
-		app.errorJSON(w, errors.New("invalid credentials"), http.StatusBadRequest)
+	createResult := model.LogEntryDB.Create(logEntry)
+
+	if createResult.Status != common.APIStatus.Ok {
+		common.WriteJSON(w, 400, createResult, nil)
 		return
 	}
 
-	valid, err := user.PasswordMatches(requestPayload.Password)
-	if err != nil || !valid {
-		app.errorJSON(w, errors.New("invalid credentials"), http.StatusBadRequest)
-		return
+	result := &common.APIResponse{
+		Status:  common.APIStatus.Ok,
+		Message: "Tạo biểu phí thành công",
 	}
-
-	// log authentication
-	err = app.logRequest("authentication", fmt.Sprintf("%s logged in", user.Email))
-	if err != nil {
-		app.errorJSON(w, err)
-		return
-	}
-
-	payload := jsonResponse{
-		Error:   false,
-		Message: fmt.Sprintf("Logged in user %s", user.Email),
-		Data:    user,
-	}
-
-	app.writeJSON(w, http.StatusAccepted, payload)
+	common.WriteJSON(w, 400, result, nil)
 }
 
-func (app *Config) logRequest(name, data string) error {
+func logRequest(name, data string) error {
 	var entry struct {
 		Name string `json:"name"`
 		Data string `json:"data"`
