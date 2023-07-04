@@ -28,13 +28,12 @@ func main2() {
 			Data: "motherfucker",
 		},
 	})
-	fmt.Println("2. go after rpc")
 
 	if err2 != nil {
 		fmt.Println(err.Error())
 		return
 	} else {
-		fmt.Println("Done, api call motherfucker")
+		fmt.Println("Done, api called motherfucker")
 		fmt.Println(result.Message)
 	}
 
