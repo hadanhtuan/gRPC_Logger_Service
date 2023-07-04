@@ -32,7 +32,7 @@ func CreateLogEntry(w http.ResponseWriter, r *http.Request) {
 		Status:  common.APIStatus.Ok,
 		Message: "Tạo biểu phí thành công",
 	}
-	common.WriteJSON(w, 400, result, nil)
+	common.WriteJSON(w, 200, result, nil)
 }
 
 func logRequest(name, data string) error {
