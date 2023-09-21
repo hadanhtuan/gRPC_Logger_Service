@@ -10,6 +10,7 @@ import (
 	"net"
 )
 
+/*TODO: define for server  */
 type LoggerServer struct {
 	pb.UnimplementedLogServiceServer
 	model.LogEntry
